@@ -1,0 +1,24 @@
+代码操作说明
+（HL队伍）
+
+直接进入code/下，执行 sh run.sh即可。
+或防止程序意外中断，可执行  nohup sh run.sh &
+
+
+文件说明：
+工具文件：stopwords.txt, utils.py
+1. 数据预处理和特征工程
+fea_process.py （数据处理，特征工程）
+get_data.py （采样，整理得到训练所需的数据）
+
+
+2. 模型训练
+模型：LightGBM, DeepFM
+lgb.py  （lgb模型训练）
+nn.py   （DeepFM模型训练）
+
+3. 测试集预测
+lgb_inference.py  （lgb模型推断）
+nn_inference.py   （nn模型推断）
+inference.py  （将lgb和nn模型推断结果融合，然后得到提交文件submission.csv）
+

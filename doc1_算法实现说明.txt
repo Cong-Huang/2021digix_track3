@@ -1,0 +1,35 @@
+基于多目标优化的视频推荐-算法实现说明
+（HL队伍）
+
+1.	数据预处理和特征工程
+（1）	数据预处理
+a)	将历史14天的数据依时间顺序读取，合并为一张大表；
+b)	读取第15天的测试集，用户信息表和视频信息表，压缩内存，存为pkl文件。
+
+（2）	特征工程
+a)	视频信息表预处理：计算视频发布的天数，发布的年份，视频类别取第一个，缺失的数值特征进行均值填充；
+b)	Word2vec特征：用户的推荐视频序列，训练word2vec，得到视频的embedding（16维）；
+c)	Tfidf-svd特征：用户的推荐视频序列，视频的用户序列，分别计算tfidf-svd降维特征，得到10维的embedding；
+d)	图网络特征：构建user-video图网络，训练ProNE算法，得到图网络embedding，user embedding 32维，video embedding 32维
+e)	历史统计特征（曝光特征、ctr特征）：对user_id, video_id，age, gender，video_class计算历史所有天的统计特征；
+f)	历史3天的统计特征（曝光特征、ctr特征）：对user_id, video_id计算历史3天的统计特征；
+g)	全局统计特征：类别属性的count、nunique统计、数值属性的mean、max、sum统计特征。
+
+2.	模型训练
+模型：LightGBM;
+样本：正样本保留，负样本随机采样15%；
+Is_share：二分类建模；
+Watch_label：多分类，单折单模
+	
+   模型：DeepFM
+样本：正样本保留，负样本随机采样15%；
+Is_share：二分类建模；
+Watch_label：多分类，单折单模
+
+
+3.	测试集预测
+加载上述训练好的Lightgbm和DeepFM模型权重，对测试集推断，预测is_share的概率和每个观看时长区间的概率；
+其中，对于watch_label预测，需要手动设置每个类阈值，然后按照阈值规则输出得到预测值。
+
+
+
